@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> 위드인카페 선착순 메뉴 주문 시스템</title>
+    <title>위드인카페 선착순 메뉴 주문 시스템</title>
     <style>
         * {
             margin: 0;
@@ -1061,7 +1061,6 @@
             box-shadow: 0 6px 15px rgba(139, 69, 19, 0.3);
         }
 
-
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2em;
@@ -1110,12 +1109,12 @@
         <div class="mode-switcher">
             <button class="mode-btn active" onclick="switchMode('order')">🛒 주문하기</button>
             <button class="mode-btn" onclick="switchMode('status')">📋 내 주문 확인</button>
-            <button class="mode-btn" onclick="openAdminPasswordModal()">🔑 관리자 페이지</button>
+            <button class="mode-btn" onclick="openAdminPasswordModal()">🔒 관리자 페이지</button>
         </div>
 
         <div id="orderMode" class="content-area">
             <div id="orderFullNotice" class="order-full-notice hidden">
-                ⚠️ 오늘 주문이 마감되었습니다 (10명 완료)
+                ⚠️ 당일 주문이 마감되었습니다.
             </div>
 
             <div class="card">
@@ -1201,17 +1200,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label>☕ 컵 선택</label>
-                    <div class="temp-options">
-                        <button class="cup-btn" id="widenCupBtn" onclick="selectCup(this, '위드인컵')">
-                            ☕ 위드인컵
-                        </button>
-                        <button class="cup-btn" id="personalCupBtn" onclick="selectCup(this, '개인텀블러')">
-                            🥤 개인텀블러
-                        </button>
+                    <label>컵 선택</label>
+                    <div class="temp-options" id="cupOptions">
+                        <div class="cup-btn" id="personal" onclick="selectCup(this, 'personal')">개인 텀블러</div>
+                        <div class="cup-btn" id="we_don_cup" onclick="selectCup(this, 'we_don_cup')">위드인컵</div>
                     </div>
                     <div id="personalCupNotice" class="personal-cup-notice hidden">
-                        💡 개인텀블러는 카페로 직접 가져다 주셔야 합니다.
+                        <span>📝</span> 개인텀블러는 주문 접수 후 카페로 가져다 주시기 바랍니다.
+                    </div>
+                    <div id="wedonCupNotice" class="personal-cup-notice hidden">
+                        <span>♻️</span> 다 드신 컵은 배달 위치에 두시면 4교시에 수거 예정입니다.
                     </div>
                 </div>
 
@@ -1284,7 +1282,7 @@
                     <div class="stats">
                         <div class="stat-card">
                             <div class="stat-number" id="totalOrders">0</div>
-                            <div class="stat-label">총 주문 건수</div>
+                            <div class="stat-label">이 주문 건수</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-number" id="completedOrders">0</div>
@@ -1308,7 +1306,7 @@
                     <h2 style="margin-bottom: 20px; color: #8B7355;">📋 메뉴 관리</h2>
                     <div class="card" style="margin-bottom: 25px; background: rgba(255, 248, 240, 0.95);">
                         <div class="menu-management-grid">
-                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1405,7 +1403,7 @@
         const settingsRef = doc(db, 'settings', 'limits');
 
         const adminPassword = '1018';
-        let orderLimit = 10; // Firebase에서 불러올 기본값
+        let orderLimit = 10;
         let orders = [];
 
         function getTodayDate() {
@@ -1447,9 +1445,9 @@
             options: [],
             request: ''
         };
-        let menuStatus = {}; // 메뉴 상태를 저장할 객체
+        let menuStatus = {};
         let myOrder = null;
-        let unsubscribeMyOrder = null; // 실시간 업데이트 해제를 위한 변수
+        let unsubscribeMyOrder = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             updateCurrentTime();
@@ -1497,10 +1495,9 @@
                 if (doc.exists()) {
                     menuStatus = doc.data();
                 } else {
-                    // 최초 실행시 기본 메뉴 상태 설정
                     menuStatus = {};
                     menuItems.forEach(item => {
-                        menuStatus[item.name] = true; // 기본적으로 모든 메뉴 사용가능
+                        menuStatus[item.name] = true;
                     });
                     setDoc(menuStatusRef, menuStatus);
                 }
@@ -1512,10 +1509,10 @@
         function updateMenuDisplay() {
             const menuItems = document.querySelectorAll('.menu-item');
             menuItems.forEach(item => {
-                const menuName = item.getAttribute('onclick').split("'")[1]; // onclick 속성에서 메뉴명 추출
+                const menuName = item.getAttribute('onclick').split("'")[1];
                 if (menuStatus[menuName] === false) {
                     item.classList.add('sold-out');
-                    item.onclick = null; // 클릭 이벤트 비활성화
+                    item.onclick = null;
                 } else {
                     item.classList.remove('sold-out');
                     item.onclick = function() { selectMenu(this, menuName); };
@@ -1569,7 +1566,6 @@
                 renderAdminOrders();
                 updateOrderLimitBadge();
                 
-                // 내 주문 상태가 표시되고 있을 때 실시간 업데이트
                 if (!document.getElementById('myOrderStatusCard').classList.contains('hidden') && myOrder) {
                     const updatedMyOrder = orders.find(order => order.id === myOrder.id);
                     if (updatedMyOrder) {
@@ -1580,7 +1576,6 @@
             });
         }
 
-        // 새로 추가된 함수: 내 주문 화면 업데이트
         function updateMyOrderDisplay() {
             if (myOrder) {
                 const details = `
@@ -1601,7 +1596,6 @@
             const location = document.getElementById('location').value.trim();
             const request = document.getElementById('request').value;
 
-            // 필수 항목 유효성 검사
             const missingItems = [];
             if (!name) missingItems.push('주문자명');
             if (!location) missingItems.push('배달위치');
@@ -1636,19 +1630,18 @@
                 request: request,
                 status: 'checking',
                 timestamp: serverTimestamp(),
-                nameLowerCase: name.toLowerCase() // 검색을 위한 소문자 필드 추가
+                nameLowerCase: name.toLowerCase()
             };
 
             try {
                 const docRef = await addDoc(ordersRef, newOrder);
-                // 방금 추가된 주문을 myOrder로 설정
                 myOrder = { id: docRef.id, ...newOrder };
                 
                 openModal('orderSuccessModal');
                 resetForm();
                 switchMode('status');
                 document.getElementById('myOrderName').value = name;
-                await searchMyOrder(); // 주문 후 자동으로 검색
+                await searchMyOrder();
             } catch (e) {
                 console.error("Error adding document: ", e);
                 showToast('❌ 주문 전송에 실패했습니다. 다시 시도해주세요.');
@@ -1721,7 +1714,6 @@
         }
         
         function selectMenu(element, menuName) {
-            // 솔드아웃된 메뉴는 선택 불가
             if (menuStatus[menuName] === false) {
                 showToast('🚫 이 메뉴는 솔드아웃 상태입니다.');
                 return;
@@ -1761,16 +1753,26 @@
         }
 
         function selectCup(element, cupName) {
-            document.querySelectorAll('#widenCupBtn, #personalCupBtn').forEach(btn => btn.classList.remove('selected'));
+            // 모든 컵 버튼에서 selected 클래스 제거
+            document.querySelectorAll('.cup-btn').forEach(btn => btn.classList.remove('selected'));
+            
+            // 선택된 버튼에 selected 클래스 추가
             element.classList.add('selected');
             currentOrder.cup = cupName;
             
-            // 개인텀블러 선택 시 안내 메시지 표시
-            const notice = document.getElementById('personalCupNotice');
-            if (cupName === '개인텀블러') {
-                notice.classList.remove('hidden');
-            } else {
-                notice.classList.add('hidden');
+            // 안내 메시지 처리
+            const personalNotice = document.getElementById('personalCupNotice');
+            const wedonNotice = document.getElementById('wedonCupNotice');
+            
+            // 모든 안내 메시지 숨기기
+            personalNotice.classList.add('hidden');
+            wedonNotice.classList.add('hidden');
+            
+            // 선택된 컵에 따른 안내 메시지 표시
+            if (cupName === 'personal') {
+                personalNotice.classList.remove('hidden');
+            } else if (cupName === 'we_don_cup') {
+                wedonNotice.classList.remove('hidden');
             }
             
             updateSubmitButtonState();
@@ -1811,13 +1813,13 @@
             document.querySelectorAll('.menu-item.selected').forEach(item => item.classList.remove('selected'));
             document.querySelectorAll('.temp-btn.selected').forEach(btn => btn.classList.remove('selected'));
             document.querySelectorAll('.cup-btn.selected').forEach(btn => btn.classList.remove('selected'));
+            document.querySelectorAll('.option-btn.selected').forEach(btn => btn.classList.remove('selected'));
             
-            // 메뉴 버튼 상태 초기화
             document.getElementById('hotBtn').disabled = false;
             document.getElementById('iceBtn').disabled = false;
             
-            // 개인컵 안내 메시지 숨기기
             document.getElementById('personalCupNotice').classList.add('hidden');
+            document.getElementById('wedonCupNotice').classList.add('hidden');
             
             currentOrder = { name: '', location: '', menu: '', temp: '', cup: '', options: [], request: '' };
             updateSubmitButtonState();
@@ -1831,17 +1833,15 @@
             if (!nameToSearch) {
                 myOrderStatusCard.classList.add('hidden');
                 noOrderMessage.classList.remove('hidden');
-                noOrderMessage.innerHTML = '<h3>주문자 이름을 입력해주세요.</h3>';
+                noOrderMessage.innerHTML = '<h3>주문자 성함을 입력해주세요.</h3>';
                 return;
             }
 
             try {
-                // 개선된 검색: 더 간단한 쿼리 사용
                 const q = query(ordersRef, where('nameLowerCase', '==', nameToSearch.toLowerCase()));
                 const querySnapshot = await getDocs(q);
 
                 if (!querySnapshot.empty) {
-                    // 가장 최근 주문 찾기 (타임스탬프 기준)
                     let latestOrder = null;
                     let latestTimestamp = null;
                     
@@ -1865,7 +1865,7 @@
                 } else {
                     myOrderStatusCard.classList.add('hidden');
                     noOrderMessage.classList.remove('hidden');
-                    noOrderMessage.innerHTML = `<h3>'${nameToSearch}'님의 주문 내역이 없습니다.</h3><p>이름을 다시 확인해주세요!</p>`;
+                    noOrderMessage.innerHTML = `<h3>'${nameToSearch}'님의 주문 내역이 없습니다.</h3><p>성함을 다시 확인해주세요!</p>`;
                 }
             } catch (error) {
                 console.error("Error searching for my order: ", error);
@@ -1911,7 +1911,6 @@
             document.getElementById('completedOrders').textContent = completedCount;
             document.getElementById('pendingOrders').textContent = pendingCount;
 
-            // 주문 정렬: 미완료 주문을 위로, 완료된 주문을 아래로
             const pendingOrders = orders.filter(o => o.status !== 'completed').sort((a, b) => {
                 const aTime = a.timestamp?.toMillis() || 0;
                 const bTime = b.timestamp?.toMillis() || 0;
@@ -1975,19 +1974,19 @@
         });
 
         document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
-    if (orderToDeleteId) {
-        try {
-            await deleteDoc(doc(ordersRef, orderToDeleteId));
-            console.log("Document successfully deleted!");
-            showToast('✅ 주문이 삭제되었습니다.');
-        } catch (error) {
-            console.error("Error removing document: ", error);
-            showToast('❌ 주문 삭제에 실패했습니다.');
-        }
-    }
-    closeModal('deleteModal');
-    orderToDeleteId = null;
-});
+            if (orderToDeleteId) {
+                try {
+                    await deleteDoc(doc(ordersRef, orderToDeleteId));
+                    console.log("Document successfully deleted!");
+                    showToast('✅ 주문이 삭제되었습니다.');
+                } catch (error) {
+                    console.error("Error removing document: ", error);
+                    showToast('❌ 주문 삭제에 실패했습니다.');
+                }
+            }
+            closeModal('deleteModal');
+            orderToDeleteId = null;
+        });
 
         function showToast(message) {
             const toast = document.getElementById('toast');
@@ -2018,7 +2017,7 @@
             if (password === adminPassword) {
                 closeModal('passwordModal');
                 switchMode('admin');
-                switchAdminTab('orderList'); // 기본으로 주문 목록 탭을 보여줍니다.
+                switchAdminTab('orderList');
             } else {
                 alert('🚨 비밀번호가 틀렸습니다.');
                 document.getElementById('adminPasswordInput').value = '';
@@ -2042,5 +2041,5 @@
         window.saveDailyLimit = saveDailyLimit;
     </script>
 </body>
-
 </html>
+            
