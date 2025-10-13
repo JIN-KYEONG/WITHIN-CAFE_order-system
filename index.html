@@ -1381,7 +1381,7 @@
             const isWithinOrderTime = currentTime >= orderStartTime && currentTime <= orderEndTime;
             
             if (!isWithinOrderTime) {
-                showToast(`🕐 주문 가능 시간이 아닙니다. (${orderStartTime}-${orderEndTime})`);
+                showToast(`🕐 지금은 주문 가능 시간이 아닙니다. (${orderStartTime}-${orderEndTime})`);
                 return;
             }
 
@@ -1658,7 +1658,7 @@
             if (!isWithinOrderTime) {
                 badge.classList.add('full');
                 orderTimeNotice.classList.remove('hidden');
-                orderTimeNotice.innerHTML = `🕐 주문 시간이 아닙니다.<br>주문 가능 시간: ${orderStartTime} - ${orderEndTime}`;
+                orderTimeNotice.innerHTML = `🕐 지금은 주문 가능 시간이 아닙니다.<br>주문 가능 시간: ${orderStartTime} - ${orderEndTime}`;
                 orderFullNotice.classList.add('hidden');
             } else if (orders.length >= orderLimit) {
                 badge.classList.add('full');
@@ -1715,7 +1715,7 @@
             if (!isWithinOrderTime) {
                 badge.classList.add('full');
                 orderTimeNotice.classList.remove('hidden');
-                orderTimeNotice.innerHTML = `🕐 주문 시간이 아닙니다.<br>주문 가능 시간: ${orderStartTime} - ${orderEndTime}`;
+                orderTimeNotice.innerHTML = `🕐 지금은 주문 가능 시간이 아닙니다.<br>주문 가능 시간: ${orderStartTime} - ${orderEndTime}`;
                 orderFullNotice.classList.add('hidden');
             } else if (orders.length >= orderLimit) {
                 badge.classList.add('full');
@@ -2049,5 +2049,6 @@
     </script>
 </body>
 </html>
+
 
 
