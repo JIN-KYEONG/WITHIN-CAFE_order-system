@@ -648,8 +648,8 @@
         </div>
 
         <div id="orderMode" class="content-area">
-            <div id="orderFullNotice" class="order-full-notice hidden">⚠️ 당일 주문이 마감되었습니다.</div>
-            <div id="orderTimeNotice" class="order-time-notice hidden">🕐 주문 시간이 아닙니다.</div>
+            <div id="orderFullNotice" class="order-full-notice hidden">⚠️ 당일 주문 가능 수량이 마감되었습니다.</div>
+            <div id="orderTimeNotice" class="order-time-notice hidden">🕐 지금은 주문 가능 시간이 아닙니다.</div>
 
             <div class="card">
                 <h2 style="margin-bottom: 25px; color: #2C3E50;">☕ 주문서 작성</h2>
@@ -660,7 +660,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="location">📍 배달위치</label>
+                    <label for="location">📍 배달위치(동과 층 모두 전확히 기재 부탁 드립니다.)</label>
                     <input type="text" id="location" placeholder="예: 나동 2층 전공과 연구실">
                 </div>
 
@@ -672,23 +672,23 @@
                             <span class="emoji">☕</span>
                             <div class="name">아메리카노</div>
                         </div>
-                        <div class="menu-item" data-menu="카페라떼">
+                        <div class="menu-item" data-menu="카페 라떼">
                             <div class="recommend-badge">⭐ 바리스타 은수 추천!</div>
                             <span class="emoji">🥛</span>
-                            <div class="name">카페라떼</div>
+                            <div class="name">카페 라떼</div>
                         </div>
                         <div class="menu-item" data-menu="바닐라빈 라떼">
                             <span class="emoji">🍦</span>
                             <div class="name">바닐라 라떼</div>
                         </div>
-                        <div class="menu-item" data-menu="말차라떼">
+                        <div class="menu-item" data-menu="말차 라떼">
                             <span class="emoji">🍵</span>
-                            <div class="name">말차라떼</div>
+                            <div class="name">말차 라떼</div>
                         </div>
-                        <div class="menu-item" data-menu="초코라떼">
+                        <div class="menu-item" data-menu="초코 라떼">
                             <div class="recommend-badge">⭐ 바리스타 수아 추천!</div>
                             <span class="emoji">🍫</span>
-                            <div class="name">초코라떼</div>
+                            <div class="name">초코 라떼</div>
                         </div>
                         <div class="menu-item ice-only" data-menu="복숭아 아이스티">
                             <div class="recommend-badge">⭐ 바리스타 수진 추천!</div>
@@ -698,7 +698,7 @@
                         <div class="menu-item ice-only" data-menu="아샷추">
                             <span class="emoji">💪</span>
                             <div class="name">아샷추</div>
-                            <small>복숭아+샷추가</small>
+                            <small>아이스티+샷추가</small>
                         </div>
                         <div class="menu-item" data-menu="카라멜 라떼">
                             <span class="emoji">🍮</span>
@@ -720,24 +720,24 @@
                             <div class="name">고구마 라떼</div>
                             <small>HOT 전용</small>
                         </div>
-                        <div class="menu-item hot-only" data-menu="오곡라떼">
+                        <div class="menu-item hot-only" data-menu="오곡 라떼">
                             <span class="emoji">🌾</span>
-                            <div class="name">오곡라떼</div>
+                            <div class="name">오곡 라떼</div>
                             <small>HOT 전용</small>
                         </div>
-                        <div class="menu-item hot-only" data-menu="시나몬라떼">
+                        <div class="menu-item hot-only" data-menu="시나몬 라떼">
                             <span class="emoji">🍂</span>
-                            <div class="name">시나몬라떼</div>
+                            <div class="name">시나몬 라떼</div>
                             <small>HOT 전용</small>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>🌡️ HOT / ICE 선택</label>
+                    <label>🌡️ 온도 선택</label>
                     <div class="temp-options">
-                        <button class="temp-btn hot" id="hotBtn">🔥 HOT</button>
-                        <button class="temp-btn ice" id="iceBtn">❄️ ICE</button>
+                        <button class="temp-btn hot" id="hotBtn">🔥 HOT(뜨겁게)</button>
+                        <button class="temp-btn ice" id="iceBtn">❄️ ICE(차갑게)</button>
                     </div>
                 </div>
 
@@ -751,12 +751,12 @@
                         <span>📢</span> 개인텀블러는 주문 접수 후 위드인 카페 앞 카트 위에 놓아주세요!!
                     </div>
                     <div id="wedonCupNotice" class="personal-cup-notice hidden">
-                        <span>♻️</span> 다 드신 컵은 배달 위치에 두시면 쉬운 시간에 수거 예정입니다.
+                        <span>♻️</span> 다 드신 컵은 배달 위치에 두시면 쉬는 시간에 수거 예정입니다.
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>⭐ 기타 옵션 선택</label>
+                    <label>⭐ 추가 옵션(선택사항입니다.)</label>
                     <div class="option-grid" id="optionGrid">
                         <button class="option-btn" data-option="샷 추가"> 샷 추가</button>
                         <button class="option-btn" data-option="연하게"> 연하게</button>
@@ -766,7 +766,7 @@
                         <button class="option-btn" data-option="덜 달게"> 덜 달게</button>
                        
                     </div>
-                    <label for="request" style="margin-top: 15px;">📝 기타 요청사항 (따뜻한 응원 한 줄은 사랑입니다​—̳͟͞͞♡)</label>
+                    <label for="request" style="margin-top: 15px;">📝 기타 요청사항 (따뜻한 응원 한 줄은 사랑입니다 ​—̳͟͞͞♡)</label>
                     <textarea id="request" rows="3"></textarea>
                 </div>
 
@@ -823,7 +823,7 @@
                     <div class="stats">
                         <div class="stat-card">
                             <div class="stat-number" id="totalOrders">0</div>
-                            <div class="stat-label">이 주문 건수</div>
+                            <div class="stat-label">총 주문 건수</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-number" id="completedOrders">0</div>
@@ -969,18 +969,18 @@
 
         const menuItems = [
             { name: '아메리카노', emoji: '☕', type: 'both' },
-            { name: '카페라떼', emoji: '🥛', type: 'both' },
+            { name: '카페 라떼', emoji: '🥛', type: 'both' },
             { name: '바닐라 라떼', emoji: '🦴', type: 'both' },
-            { name: '말차라떼', emoji: '🍵', type: 'both' },
-            { name: '초코라떼', emoji: '🫘', type: 'both' },
+            { name: '말차 라떼', emoji: '🍵', type: 'both' },
+            { name: '초코 라떼', emoji: '🫘', type: 'both' },
             { name: '복숭아 아이스티', emoji: '🍑', type: 'ice' },
             { name: '아샷추', emoji: '🍪', type: 'ice' },
             { name: '카라멜 라떼', emoji: '🯨', type: 'both' },
             { name: '밀크티 라떼', emoji: '🥤', type: 'both' },
             { name: '밤 라떼', emoji: '🌰', type: 'hot' },
             { name: '고구마 라떼', emoji: '🍠', type: 'hot' },
-            { name: '오곡라떼', emoji: '🌾', type: 'hot' },
-            { name: '시나몬라떼', emoji: '🂡', type: 'hot' }
+            { name: '오곡 라떼', emoji: '🌾', type: 'hot' },
+            { name: '시나몬 라떼', emoji: '🂡', type: 'hot' }
         ];
 
         let currentOrder = {
@@ -1799,6 +1799,7 @@
     </script>
 </body>
 </html>
+
 
 
 
