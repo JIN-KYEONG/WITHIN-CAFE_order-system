@@ -644,7 +644,7 @@
         <div class="mode-switcher">
             <button class="mode-btn active" id="orderModeBtn">🛒 주문하기</button>
             <button class="mode-btn" id="statusModeBtn">📋 내 주문 확인</button>
-            <button class="mode-btn" id="adminModeBtn">🔐 관리자페이지</button>
+            <button class="mode-btn" id="adminModeBtn">🔐 관리자 페이지</button>
         </div>
 
         <div id="orderMode" class="content-area">
@@ -679,7 +679,7 @@
                         </div>
                         <div class="menu-item" data-menu="바닐라빈 라떼">
                             <span class="emoji">🍦</span>
-                            <div class="name">바닐라 라떼</div>
+                            <div class="name">바닐라빈 라떼</div>
                         </div>
                         <div class="menu-item" data-menu="말차 라떼">
                             <span class="emoji">🍵</span>
@@ -756,7 +756,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>⭐ 추가 옵션(선택사항입니다.)</label>
+                    <label>⭐ 추가 옵션(선택사항 입니다.)</label>
                     <div class="option-grid" id="optionGrid">
                         <button class="option-btn" data-option="샷 추가"> 샷 추가</button>
                         <button class="option-btn" data-option="연하게"> 연하게</button>
@@ -880,7 +880,7 @@
     <div id="passwordModal" class="modal-overlay">
         <div class="modal">
             <h2>관리자 비밀번호</h2>
-            <p>관리자페이지에 접속하려면 비밀번호를 입력하세요.</p>
+            <p>관리자 페이지에 접속하려면 비밀번호를 입력하세요.</p>
             <input type="password" id="adminPasswordInput" placeholder="비밀번호 입력">
             <div class="button-group">
                 <button class="confirm-btn" id="confirmAdminBtn">확인</button>
@@ -970,17 +970,17 @@
         const menuItems = [
             { name: '아메리카노', emoji: '☕', type: 'both' },
             { name: '카페 라떼', emoji: '🥛', type: 'both' },
-            { name: '바닐라 라떼', emoji: '🦴', type: 'both' },
+            { name: '바닐라 라떼', emoji: '🍦', type: 'both' },
             { name: '말차 라떼', emoji: '🍵', type: 'both' },
-            { name: '초코 라떼', emoji: '🫘', type: 'both' },
+            { name: '초코 라떼', emoji: '🍫', type: 'both' },
             { name: '복숭아 아이스티', emoji: '🍑', type: 'ice' },
-            { name: '아샷추', emoji: '🍪', type: 'ice' },
-            { name: '카라멜 라떼', emoji: '🯨', type: 'both' },
+            { name: '아샷추', emoji: '💪', type: 'ice' },
+            { name: '카라멜 라떼', emoji: '🍮', type: 'both' },
             { name: '밀크티 라떼', emoji: '🥤', type: 'both' },
             { name: '밤 라떼', emoji: '🌰', type: 'hot' },
             { name: '고구마 라떼', emoji: '🍠', type: 'hot' },
             { name: '오곡 라떼', emoji: '🌾', type: 'hot' },
-            { name: '시나몬 라떼', emoji: '🂡', type: 'hot' }
+            { name: '시나몬 라떼', emoji: '🍂', type: 'hot' }
         ];
 
         let currentOrder = {
@@ -1516,7 +1516,7 @@
                 } else if (orders.length >= orderLimit) {
                     submitBtn.textContent = '오늘 주문 마감';
                 } else {
-                    submitBtn.textContent = '필수 항목 작성';
+                    submitBtn.textContent = '필수 항목을 모두 선택해 주세요!';
                 }
             }
         }
@@ -1544,7 +1544,7 @@
             if (!nameToSearch) {
                 myOrderStatusCard.classList.add('hidden');
                 noOrderMessage.classList.remove('hidden');
-                noOrderMessage.innerHTML = '<h3>주문자 성함을 입력해주세요.</h3>';
+                noOrderMessage.innerHTML = '<h3>주문자명을 입력해주세요.</h3>';
                 return;
             }
             try {
@@ -1799,6 +1799,7 @@
     </script>
 </body>
 </html>
+
 
 
 
