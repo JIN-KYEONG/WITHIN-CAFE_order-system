@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>부천상록학교 위드인카페</title>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F0F4F8;
+            --main-color: #2C3E50;
+            --accent-color: #5DADE2;
+            --light-bg-color: #FFFFFF;
+            --border-color: #D6EAF8;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #E8F4F8 0%, #D5E8F7 50%, #C3DDF5 100%);
+            color: var(--main-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(93, 173, 226, 0.2);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .header .school-name {
+            font-size: 1.2em;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            color: var(--main-color);
+            margin-bottom: 5px;
+        }
+        .header p {
+            font-size: 1em;
+            color: #5499C7;
+        }
+        .order-limit-badge {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-top: 15px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        .order-limit-badge.full {
+            background: #E74C3C;
+        }
+        .order-full-notice, .order-time-notice {
+            background: #E74C3C;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .hidden {
+            display: none;
+        }
+        .mode-switcher {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            background: var(--light-bg-color);
+            border-radius: 15px;
+            padding: 8px;
+        }
+        .mode-btn {
+            flex-grow: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            background: transparent;
+            color: var(--main-color);
+            transition: all 0.3s ease;
+        }
+        .mode-btn.active {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(93, 173, 226, 0.3);
+        }
+        .card {
+            background: var(--light-bg-color);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            font-weight: 700;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: white;
+            font-size: 16px;
+            color: var(--main-color);
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        /* 메뉴 카테고리 제목 스타일 */
+        .menu-category-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--main-color);
+            margin-top: 25px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .menu-category-title:first-of-type {
+            margin-top: 10px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+        }
+        .menu-item {
+            text-align: center;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* new 메뉴 뱃지 스타일 수정: 보라색 배경으로 변경 */
+        .menu-item.new-menu .recommend-badge {
+            background: #9B59B6; /* 보라색 */
+            color: white;        /* 글자색 흰색 */
+        }
+
+        .menu-item.selected {
+            border-color: var(--accent-color);
+            border-width: 4px;
+            transform: translateY(-5px);
+        }
+        .menu-item .emoji {
+            font-size: 2em;
+            display: block;
+        }
+        .menu-item .name {
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+        .menu-item small {
+            display: block;
+            font-size: 0.7em;
+            color: #5499C7;
+        }
+        .menu-item.sold-out {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .menu-item.sold-out::after {
+            content: 'SOLD OUT';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            background: rgba(255, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 700;
+            z-index: 10;
+        }
+        .recommend-badge {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            /* 기본 뱃지는 파란색 그라데이션 */
+            background: linear-gradient(135deg, #5DADE2 0%, #3498DB 100%);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.65em;
+            font-weight: 700;
+            white-space: nowrap;
+            z-index: 5;
+        }
+        .temp-options, .cup-options {
+            display: flex;
+            gap: 10px;
+        }
+        .option-grid {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .temp-btn, .cup-btn, .option-btn {
+            flex-grow: 1;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: white;
+            color: var(--main-color);
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .option-btn {
+            width: calc(50% - 5px);
+        }
+        .temp-btn.hot.selected {
+            background: #E74C3C;
+            color: white;
+            border-color: #E74C3C;
+        }
+        .temp-btn.ice.selected {
+            background: #3498DB;
+            color: white;
+            border-color: #3498DB;
+        }
+        .cup-btn.selected, .option-btn.selected {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        .temp-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .personal-cup-notice {
+            background: #D5F4E6;
+            border-left: 5px solid #27AE60;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+        .temp-badge {
+            display: inline-block;
+            font-size: 0.9em;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 5px;
+        }
+        .temp-badge.hot {
+            color: #E74C3C;
+        }
+        .temp-badge.ice {
+            color: #3498DB;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--accent-color) 0%, #3498DB 100%);
+            color: white;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .submit-btn:disabled {
+            background: #BDC3C7;
+            cursor: not-allowed;
+        }
+        .search-area {
+            margin-bottom: 25px;
+            display: flex;
+            gap: 10px;
+        }
+        .search-area input {
+            flex-grow: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+        }
+        .search-area button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .my-order-status h3 {
+            color: var(--main-color);
+            margin-bottom: 15px;
+        }
+        .my-order-status p {
+            line-height: 1.6;
+        }
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            position: relative;
+        }
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 5%;
+            right: 5%;
+            height: 4px;
+            background: var(--border-color);
+            z-index: 1;
+        }
+        .progress-step {
+            flex-grow: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            color: #BDC3C7;
+        }
+        .progress-step .circle {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border: 4px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            color: var(--border-color);
+            margin: 0 auto 10px;
+            transition: all 0.5s ease;
+        }
+        .progress-step.active .circle {
+            border-color: #3498DB;
+            background: #3498DB;
+            color: white;
+            transform: scale(1.2);
+        }
+        .progress-step.completed .circle {
+            background: #27AE60;
+            border-color: #27AE60;
+            color: white;
+        }
+        .progress-step.active span {
+            color: #3498DB;
+            font-weight: 700;
+        }
+        .progress-step.completed span {
+            color: var(--main-color);
+            font-weight: 700;
+        }
+        .no-order-message {
+            text-align: center;
+            padding: 20px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            flex-grow: 1;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+        .stat-label {
+            font-size: 0.9em;
+            color: #5499C7;
+        }
+        .order-item {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        .order-item.status-checking {
+            background: #FEF9E7;
+            border-left: 5px solid #F39C12;
+        }
+        .order-item.status-making {
+            background: #EBF5FB;
+            border-left: 5px solid #3498DB;
+        }
+        .order-item.status-delivering {
+            background: #F4ECF7; /* 보라색 배경으로 변경 (배달중) */
+            border-left: 5px solid #9B59B6; /* 보라색 테두리로 변경 */
+        }
+        .order-item.status-completed {
+            background: #E8F5E9;
+            border-left: 5px solid #27AE60;
+        }
+        .order-info h3 {
+            font-size: 1.3em;
+            color: var(--main-color);
+            margin-bottom: 5px;
+        }
+        .order-info {
+            line-height: 1.6;
+        }
+        .order-status {
+            display: flex;
+            gap: 10px;
+        }
+        .status-select {
+            flex-grow: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            background: white;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .delete-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background: #E74C3C;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .menu-management-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        .menu-management-item {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        .menu-emoji {
+            font-size: 2em;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .menu-name {
+            font-weight: 600;
+            font-size: 0.9em;
+            color: var(--main-color);
+        }
+        .menu-status-toggle {
+            width: 100%;
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .menu-status-toggle.available {
+            background: #27AE60;
+            color: white;
+        }
+        .menu-status-toggle.sold-out {
+            background: #E74C3C;
+            color: white;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        .modal-overlay.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        .modal h2 {
+            margin-bottom: 15px;
+            color: var(--main-color);
+        }
+        .modal p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+        .modal .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .modal .button-group button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .modal .button-group .confirm-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        .modal .button-group .cancel-btn {
+            background-color: var(--border-color);
+            color: var(--main-color);
+        }
+        .modal input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+        }
+        #validationModal ul {
+            text-align: left;
+            margin: 15px 0 20px 25px;
+            list-style-type: '👉 ';
+            font-weight: 600;
+        }
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #34495E;
+            color: #fff;
+            text-align: center;
+            border-radius: 10px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-weight: 600;
+        }
+        .toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @keyframes fadein {
+            from { bottom: 0; opacity: 0; }
+            to { bottom: 30px; opacity: 1; }
+        }
+        @keyframes fadeout {
+            from { bottom: 30px; opacity: 1; }
+            to { bottom: 0; opacity: 0; }
+        }
+        .admin-tab-switcher {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: white;
+            border-radius: 15px;
+        }
+        .admin-tab-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            background: transparent;
+            color: #2C3E50;
+            transition: all 0.3s ease;
+        }
+        .admin-tab-btn.active {
+            background: linear-gradient(135deg, #5DADE2 0%, #3498DB 100%);
+            color: white;
+        }
+        .settings-form-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .settings-form-group label {
+            white-space: nowrap;
+            font-weight: 700;
+        }
+        .settings-form-group input {
+            flex-grow: 1;
+            max-width: 150px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #D6EAF8;
+        }
+        .settings-form-group button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #5DADE2 0%, #3498DB 100%);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="school-name">부천상록학교 학교기업</div>
+            <h1>☕ 위드인카페 커피 주문 시스템</h1>
+            <p>추운 날씨 속 따뜻함 한 잔을 드립니다.</p>
+            <div class="order-limit-badge" id="orderLimitBadge">☕ 로딩 중...</div>
+        </div>
+
+        <div class="mode-switcher">
+            <button class="mode-btn active" id="orderModeBtn">🛒 주문하기</button>
+            <button class="mode-btn" id="statusModeBtn">📋 내 주문 확인</button>
+            <button class="mode-btn" id="adminModeBtn">🔐 관리자 페이지</button>
+        </div>
+
+        <div id="orderMode" class="content-area">
+            <div id="orderFullNotice" class="order-full-notice hidden">⚠️ 당일 주문 가능 수량이 마감되었습니다.</div>
+            <div id="orderTimeNotice" class="order-time-notice hidden">🕐 지금은 주문 가능 시간이 아닙니다.</div>
+
+            <div class="card">
+                <h2 style="margin-bottom: 25px; color: #2C3E50;">☕ 주문서 작성</h2>
+                
+                <div class="form-group">
+                    <label for="teacherName">👤 주문자명</label>
+                    <input type="text" id="teacherName" placeholder="성함을 입력해 주세요.">
+                </div>
+
+                <div class="form-group">
+                    <label for="location">📍 배달위치</label>
+                    <input type="text" id="location" placeholder="동과 층 모두 정확히 기재해 주세요. 예)나동 2층 전공과 연구실">
+                </div>
+
+                <div class="form-group">
+                    <label>☕ 메뉴 선택</label>
+                    
+                    <h3 class="menu-category-title">☕ 커피 (Coffee)</h3>
+                    <div class="menu-grid">
+                        <div class="menu-item" data-menu="아메리카노">
+                            <div class="recommend-badge">👍 바리스타 은서 추천!</div>
+                            <span class="emoji">☕</span>
+                            <div class="name">아메리카노</div>
+                        </div>
+                        <div class="menu-item" data-menu="카페 라떼">
+                            <div class="recommend-badge">👍 바리스타 은수 추천!</div>
+                            <span class="emoji">🥛</span>
+                            <div class="name">카페 라떼</div>
+                        </div>
+                        <div class="menu-item" data-menu="바닐라 라떼">
+                            <span class="emoji">🍦</span>
+                            <div class="name">바닐라 라떼</div>
+                        </div>
+                        <div class="menu-item ice-only" data-menu="아샷추">
+                            <span class="emoji">💪</span>
+                            <div class="name">아샷추</div>
+                            <small>아이스티+샷추가</small>
+                        </div>
+                        <div class="menu-item" data-menu="카라멜 라떼">
+                            <span class="emoji">🍮</span>
+                            <div class="name">카라멜 라떼</div>
+                        </div>
+                    </div>
+
+                    <h3 class="menu-category-title">🥤 논커피 (Non-Coffee)</h3>
+                    <div class="menu-grid">
+                        <div class="menu-item" data-menu="말차 라떼">
+                            <span class="emoji">🍵</span>
+                            <div class="name">말차 라떼</div>
+                        </div>
+                        <div class="menu-item" data-menu="초코 라떼">
+                            <div class="recommend-badge">👍 바리스타 수아 추천!</div>
+                            <span class="emoji">🍫</span>
+                            <div class="name">초코 라떼</div>
+                        </div>
+                        <div class="menu-item ice-only" data-menu="복숭아 아이스티">
+                            <div class="recommend-badge">👍 바리스타 수진 추천!</div>
+                            <span class="emoji">🍑</span>
+                            <div class="name">복숭아<br>아이스티</div>
+                        </div>
+                        <div class="menu-item" data-menu="밀크티 라떼">
+                            <div class="recommend-badge">👍 바리스타 영우 추천!</div>
+                            <span class="emoji">🥤</span>
+                            <div class="name">밀크티 라떼</div>
+                        </div>
+                        <div class="menu-item hot-only" data-menu="밤 라떼">
+                            <span class="emoji">🌰</span>
+                            <div class="name">밤 라떼</div>
+                            <small>HOT 전용</small>
+                        </div>
+                        <div class="menu-item hot-only" data-menu="고구마 라떼">
+                            <div class="recommend-badge">👍 바리스타 지성 추천!</div>
+                            <span class="emoji">🍠</span>
+                            <div class="name">고구마 라떼</div>
+                            <small>HOT 전용</small>
+                        </div>
+                        <div class="menu-item hot-only" data-menu="오곡 라떼">
+                            <span class="emoji">🌾</span>
+                            <div class="name">오곡 라떼</div>
+                            <small>HOT 전용</small>
+                        </div>
+                        <div class="menu-item hot-only" data-menu="시나몬 라떼">
+                            <span class="emoji">🍂</span>
+                            <div class="name">시나몬 라떼</div>
+                            <small>HOT 전용</small>
+                       </div>
+                        
+                        <div class="menu-item hot-only new-menu" data-menu="레몬차">
+                            <div class="recommend-badge">🌟 new!</div>
+                            <span class="emoji">🍋</span>
+                            <div class="name">레몬차</div>
+                            <small>HOT 전용</small>
+                        </div>
+                        <div class="menu-item new-menu" data-menu="뱅쇼">
+                            <div class="recommend-badge">🌟 new!</div>
+                            <span class="emoji">🍷</span>
+                            <div class="name">뱅쇼</div>
+                        </div>
+                        <div class="menu-item new-menu" data-menu="배도라지모과차">
+                             <div class="recommend-badge">🌟 new!</div>
+                            <span class="emoji">🍐</span>
+                            <div class="name">배도라지<br>모과차</div>
+                        </div>
+                        <div class="menu-item ice-only new-menu" data-menu="레몬에이드">
+                            <div class="recommend-badge">🌟 new!</div>
+                           <span class="emoji">🍸</span>
+                           <div class="name">레몬에이드</div>
+                       </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>🌡️ 온도 선택</label>
+                    <div class="temp-options">
+                        <button class="temp-btn hot" id="hotBtn">🔥 HOT(뜨겁게)</button>
+                        <button class="temp-btn ice" id="iceBtn">❄️ ICE(차갑게)</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>컵 선택</label>
+                    <div class="cup-options">
+                        <div class="cup-btn" id="personalCupBtn">개인 텀블러</div>
+                        <div class="cup-btn" id="wedonCupBtn">위드인컵</div>
+                    </div>
+                    <div id="personalCupNotice" class="personal-cup-notice hidden">
+                        <span>📢</span> 개인텀블러는 주문 접수 후 위드인 카페 앞 카트 위에 놓아주세요!!
+                    </div>
+                    <div id="wedonCupNotice" class="personal-cup-notice hidden">
+                        <span>♻️</span> 다 드신 컵은 4교시에 학생들이 수거할 예정이오니 배달 위치에 그대로 두시면 됩니다.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>👍 추가 옵션(선택사항 입니다.)</label>
+                    <div class="option-grid" id="optionGrid">
+                        <button class="option-btn" data-option="샷 추가"> 샷 추가</button>
+                        <button class="option-btn" data-option="연하게"> 연하게</button>
+                        <button class="option-btn" data-option="얼음 많이"> 얼음 많이</button>
+                        <button class="option-btn" data-option="얼음 적게"> 얼음 적게</button>
+                        <button class="option-btn" data-option="더 달게"> 더 달게</button>
+                        <button class="option-btn" data-option="덜 달게"> 덜 달게</button>
+                       
+                    </div>
+                    <label for="request" style="margin-top: 15px;">📝 기타 요청사항 (따뜻한 응원 한 줄은 사랑입니다 ​—̳͟͞͞♡)</label>
+                    <textarea id="request" rows="3"></textarea>
+                </div>
+
+                <button class="submit-btn" id="submitBtn">주문하기</button>
+            </div>
+        </div>
+
+        <div id="statusMode" class="content-area hidden">
+            <div class="card">
+                <div class="search-area">
+                    <input type="text" id="myOrderName" placeholder="주문자 성함을 입력하세요">
+                    <button id="searchBtn">🔍 검색</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="my-order-status hidden" id="myOrderStatusCard">
+                    <h3>내 주문 현황</h3>
+                    <p id="myOrderDetails"></p>
+                    <div class="progress-bar">
+                        <div class="progress-step" id="progressStep1">
+                            <div class="circle">📋</div>
+                            <span>주문 접수</span>
+                        </div>
+                        <div class="progress-step" id="progressStep2">
+                            <div class="circle">☕</div>
+                            <span>제조 중</span>
+                        </div>
+                        <div class="progress-step" id="progressStep3">
+                            <div class="circle">🚗</div>
+                            <span>배달 중</span>
+                        </div>
+                        <div class="progress-step" id="progressStep4">
+                            <div class="circle">✅</div>
+                            <span>배달 완료</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="no-order-message" id="noOrderMessage">
+                    <h3>아직 주문한 내역이 없어요.</h3>
+                    <p>위의 '주문하기' 버튼을 눌러 주문을 해보세요!</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="adminMode" class="content-area hidden">
+            <div class="admin-tab-switcher">
+                <button class="admin-tab-btn active" id="orderListTab">📋 주문 목록</button>
+                <button class="admin-tab-btn" id="menuManagementTab">🔧 메뉴 관리</button>
+                <button class="admin-tab-btn" id="orderSettingsTab">⚙️ 주문 설정</button>
+            </div>
+            <div id="orderListTabContent">
+                <div class="card">
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalOrders">0</div>
+                            <div class="stat-label">총 주문 건수</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="completedOrders">0</div>
+                            <div class="stat-label">완료된 주문</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="pendingOrders">0</div>
+                            <div class="stat-label">처리 중인 주문</div>
+                        </div>
+                    </div>
+                    
+                    <h2 style="margin-bottom: 20px; color: #2C3E50;">📋 주문 목록</h2>
+                    <div id="orderList"></div>
+                    <p id="noAdminOrderMessage" class="hidden">주문 내역이 없습니다.</p>
+                </div>
+            </div>
+            
+            <div id="menuManagementTabContent" class="hidden">
+                <div class="card">
+                    <h2 style="margin-bottom: 20px; color: #2C3E50;">📋 메뉴 관리</h2>
+                    <div class="menu-management-grid" id="menuManagementGrid"></div>
+                </div>
+            </div>
+
+            <div id="orderSettingsTabContent" class="hidden">
+                <div class="card">
+                    <h2 style="margin-bottom: 20px; color: #2C3E50;">⚙️ 주문 설정</h2>
+                    <div class="settings-form-group">
+                        <label for="dailyLimitInput">일일 주문 한도</label>
+                        <input type="number" id="dailyLimitInput" min="1" value="10">
+                        <button id="saveLimitBtn">설정 저장</button>
+                    </div>
+                    <p style="color: #5499C7; font-size: 14px; margin-top: 10px;">
+                        * 주문 한도를 초과하면 주문하기 버튼이 비활성화됩니다.
+                    </p>
+                    
+                    <div class="settings-form-group">
+                        <label for="orderStartTime">주문 시작 시간</label>
+                        <input type="time" id="orderStartTime" value="08:00">
+                        <label for="orderEndTime">주문 종료 시간</label>
+                        <input type="time" id="orderEndTime" value="16:00">
+                        <button id="saveTimeBtn">시간 저장</button>
+                    </div>
+                    <p style="color: #5499C7; font-size: 14px; margin-top: 10px;">
+                        * 설정된 시간 외에는 주문이 불가능합니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <div id="passwordModal" class="modal-overlay">
+        <div class="modal">
+            <h2>관리자 비밀번호</h2>
+            <p>관리자 페이지에 접속하려면 비밀번호를 입력하세요.</p>
+            <input type="password" id="adminPasswordInput" placeholder="비밀번호 입력">
+            <div class="button-group">
+                <button class="confirm-btn" id="confirmAdminBtn">확인</button>
+                <button class="cancel-btn" id="cancelAdminBtn">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal-overlay">
+        <div class="modal">
+            <h2>🗑️ 주문 삭제</h2>
+            <p>정말로 이 주문을 삭제하시겠습니까?</p>
+            <div class="button-group">
+                <button class="delete-btn" id="confirmDeleteBtn">삭제</button>
+                <button class="cancel-btn" id="cancelDeleteBtn">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="orderFullModal" class="modal-overlay">
+        <div class="modal">
+            <h2>⚠️ 주문 마감</h2>
+            <p>당일 주문 가능 수량이 모두 마감되었습니다.</p>
+            <div class="button-group">
+                <button class="confirm-btn" id="orderFullModalBtn">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="orderSuccessModal" class="modal-overlay">
+        <div class="modal">
+            <h2>✅ 주문 완료!</h2>
+            <p>감사합니다. 사랑을 담아 만들겠습니다.</p>
+            <div class="button-group">
+                <button class="confirm-btn" id="orderSuccessModalBtn">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="validationModal" class="modal-overlay">
+        <div class="modal">
+            <h2>🚨 주문서 오류</h2>
+            <p>아래 항목을 모두 입력/선택해주세요:</p>
+            <ul id="validationMessage"></ul>
+            <div class="button-group">
+                <button class="confirm-btn" id="validationModalBtn">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="duplicateOrderModal" class="modal-overlay">
+        <div class="modal">
+            <h2>⚠️ 중복 주문</h2>
+            <p>동일 성함으로 1개의 주문만 가능합니다.</p>
+            <p>기존 주문을 확인해주세요.</p>
+            <div class="button-group">
+                <button class="confirm-btn" id="duplicateOrderModalBtn">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+        import { getFirestore, collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, query, where, serverTimestamp, getDocs, setDoc, runTransaction } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBRyZKXMPocP7icMTDCWGSVsJWuCJjuz3A",
+            authDomain: "cafe-order-system-test.firebaseapp.com",
+            projectId: "cafe-order-system-test",
+            storageBucket: "cafe-order-system-test.firebaseapp.com",
+            messagingSenderId: "472409437909",
+            appId: "1:472409437909:web:31eeabd3e362c34b37545c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const ordersCollection = collection(db, 'orders');
+        const settingsRef = doc(db, 'settings', 'limits');
+        const dailyCounterCollection = collection(db, 'dailyCounters'); 
+
+        const adminPassword = '1018'; 
+        let orderLimit = 10;
+        let orderStartTime = '08:00';
+        let orderEndTime = '16:00';
+        let orders = [];
+        let dailyOrderCount = 0; 
+
+        // 메뉴 관리용 데이터
+        const menuItems = [
+            // Coffee
+            { name: '아메리카노', emoji: '☕', type: 'both' },
+            { name: '카페 라떼', emoji: '🥛', type: 'both' },
+            { name: '바닐라 라떼', emoji: '🍦', type: 'both' },
+            { name: '아샷추', emoji: '💪', type: 'ice' },
+            { name: '카라멜 라떼', emoji: '🍮', type: 'both' },
+            // Non-Coffee
+            { name: '말차 라떼', emoji: '🍵', type: 'both' },
+            { name: '초코 라떼', emoji: '🍫', type: 'both' },
+            { name: '복숭아 아이스티', emoji: '🍑', type: 'ice' },
+            { name: '밀크티 라떼', emoji: '🥤', type: 'both' },
+            { name: '밤 라떼', emoji: '🌰', type: 'hot' },
+            { name: '고구마 라떼', emoji: '🍠', type: 'hot' },
+            { name: '오곡 라떼', emoji: '🌾', type: 'hot' },
+            { name: '시나몬 라떼', emoji: '🍂', type: 'hot' },
+            { name: '레몬차', emoji: '🍋', type: 'hot' },
+            { name: '뱅쇼', emoji: '🍷', type: 'both' },
+            { name: '배도라지모과차', emoji: '🍐', type: 'both' },
+            { name: '레몬에이드', emoji: '🍋', type: 'ice' } 
+        ];
+
+        function getTodayDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const date = now.getDate();
+            const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+            const day = dayNames[now.getDay()];
+
+            return `${year}년 ${month}월 ${date}일(${day})`;
+        }
+        
+        function getTodayCounterKey() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const date = now.getDate();
+            return `${year}-${month}-${date}`;
+        }
+
+        const todayDate = getTodayDate();
+        let ordersRef = collection(doc(ordersCollection, todayDate), 'dailyOrders');
+        let menuStatusRef = doc(db, 'menuStatus', todayDate);
+        let dailyCounterRef = getDailyCounterRef(); 
+
+        let myOrder = null;
+        let isAdminMode = false;
+        let menuStatus = {};
+        let isFirstLoad = true;
+        let previousOrderCount = 0;
+
+        let currentOrder = {
+            menu: '',
+            temp: '',
+            cup: '',
+            options: [],
+            request: ''
+        };
+
+        function getDailyCounterRef() {
+            return doc(dailyCounterCollection, getTodayCounterKey());
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeEventListeners();
+            updateCurrentTime();
+            loadOrdersFromFirebase();
+            loadMenuStatusFromFirebase();
+            loadDailyLimitFromFirebase();
+            loadDailyCounterFromFirebase(); 
+            updateSubmitButtonState();
+        });
+
+        function initializeEventListeners() {
+            document.getElementById('orderModeBtn').addEventListener('click', () => switchMode('order'));
+            document.getElementById('statusModeBtn').addEventListener('click', () => switchMode('status'));
+            document.getElementById('adminModeBtn').addEventListener('click', openAdminPasswordModal);
+            
+            document.getElementById('orderListTab').addEventListener('click', () => switchAdminTab('orderList'));
+            document.getElementById('menuManagementTab').addEventListener('click', () => switchAdminTab('menuManagement'));
+            document.getElementById('orderSettingsTab').addEventListener('click', () => switchAdminTab('orderSettings'));
+
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', () => selectMenu(item, item.dataset.menu));
+            });
+
+            document.getElementById('hotBtn').addEventListener('click', () => selectTemp('hotBtn', 'HOT'));
+            document.getElementById('iceBtn').addEventListener('click', () => selectTemp('iceBtn', 'ICE'));
+            document.getElementById('personalCupBtn').addEventListener('click', () => selectCup('personalCupBtn', 'personal'));
+            document.getElementById('wedonCupBtn').addEventListener('click', () => selectCup('wedonCupBtn', 'we_don_cup'));
+
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', () => selectOption(btn, btn.dataset.option));
+            });
+
+            document.getElementById('teacherName').addEventListener('input', updateSubmitButtonState);
+            document.getElementById('location').addEventListener('input', updateSubmitButtonState);
+            document.getElementById('submitBtn').addEventListener('click', submitOrder);
+            
+            document.getElementById('searchBtn').addEventListener('click', searchMyOrder);
+            document.getElementById('myOrderName').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchMyOrder();
+            });
+
+            document.getElementById('confirmAdminBtn').addEventListener('click', checkAdminPassword);
+            document.getElementById('cancelAdminBtn').addEventListener('click', () => closeModal('passwordModal'));
+            document.getElementById('adminPasswordInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') checkAdminPassword();
+            });
+
+            document.getElementById('saveLimitBtn').addEventListener('click', saveDailyLimit);
+            document.getElementById('saveTimeBtn').addEventListener('click', saveOrderTimes);
+
+            document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete); // <--- confirmDelete 함수 이벤트 연결 유지
+            document.getElementById('cancelDeleteBtn').addEventListener('click', () => closeModal('deleteModal'));
+            
+            document.getElementById('orderFullModalBtn').addEventListener('click', () => closeModal('orderFullModal'));
+            document.getElementById('orderSuccessModalBtn').addEventListener('click', () => closeModal('orderSuccessModal'));
+            document.getElementById('validationModalBtn').addEventListener('click', () => closeModal('validationModal'));
+            document.getElementById('duplicateOrderModalBtn').addEventListener('click', () => closeModal('duplicateOrderModal'));
+        }
+
+        async function submitOrder() {
+            const name = document.getElementById('teacherName').value.trim();
+            const location = document.getElementById('location').value.trim();
+            const request = document.getElementById('request').value;
+
+            // 유효성 검사 (form validation)
+            if (!name || !location || !currentOrder.menu || !currentOrder.temp || !currentOrder.cup) {
+                openModal('validationModal');
+                return;
+            }
+
+            const now = new Date();
+            const koreaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
+            const currentTime = koreaTime.getHours().toString().padStart(2, '0') + ':' + koreaTime.getMinutes().toString().padStart(2, '0');
+
+            if (currentTime < orderStartTime || currentTime > orderEndTime) {
+                showToast('🕐 지금은 주문 가능 시간이 아닙니다.');
+                return;
+            }
+
+            // 중복 주문 확인
+            const q = query(ordersRef, where('nameLowerCase', '==', name.toLowerCase()));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                openModal('duplicateOrderModal');
+                return;
+            }
+
+            // ⚠️ 주문 순서 번호를 안전하게 부여하기 위한 트랜잭션 로직 적용
+            try {
+                const newSequenceNumber = await runTransaction(db, async (transaction) => {
+                    const counterDoc = await transaction.get(dailyCounterRef);
+                    let currentCounter = 0;
+                    
+                    if (counterDoc.exists()) {
+                        currentCounter = counterDoc.data().count;
+                    }
+                    
+                    const newCounter = currentCounter + 1;
+
+                    // 주문 한도 체크는 여기에서, 트랜잭션 내부에서 해야 안전합니다.
+                    if (newCounter > orderLimit) {
+                         // 트랜잭션을 롤백하고 주문 마감 오류를 발생시킵니다.
+                         throw new Error("ORDER_LIMIT_REACHED");
+                    }
+
+                    // 카운터 업데이트
+                    transaction.set(dailyCounterRef, { 
+                        count: newCounter, 
+                        date: getTodayCounterKey(), 
+                        timestamp: serverTimestamp() 
+                    });
+
+                    return newCounter;
+                });
+                
+                const orderData = {
+                    name: name,
+                    nameLowerCase: name.toLowerCase(),
+                    location: location,
+                    menu: currentOrder.menu,
+                    temp: currentOrder.temp,
+                    cup: currentOrder.cup,
+                    options: currentOrder.options,
+                    request: request,
+                    timestamp: serverTimestamp(),
+                    status: 'checking',
+                    sequenceNumber: newSequenceNumber 
+                };
+
+                const docRef = await addDoc(ordersRef, orderData);
+                const newOrder = { id: docRef.id, ...orderData };
+                myOrder = newOrder; 
+                
+                // 카운터 업데이트 후 로컬 변수 업데이트 (UI 표시용)
+                dailyOrderCount = newSequenceNumber;
+                updateOrderLimitBadge();
+
+                openModal('orderSuccessModal');
+                resetForm();
+                switchMode('status');
+                document.getElementById('myOrderName').value = name;
+                await searchMyOrder(); 
+
+            } catch (e) {
+                if (e.message === "ORDER_LIMIT_REACHED") {
+                    openModal('orderFullModal'); // 주문 마감 모달 표시
+                } else {
+                    console.error("Error adding document: ", e);
+                    showToast('❌ 주문 전송에 실패했습니다. 다시 시도해주세요.');
+                }
+            }
+        }
+
+        async function loadDailyCounterFromFirebase() {
+             onSnapshot(dailyCounterRef, (doc) => {
+                if (doc.exists()) {
+                    dailyOrderCount = doc.data().count || 0;
+                } else {
+                    dailyOrderCount = 0;
+                    // 첫 로드 시 카운터 문서가 없으면 생성 (count: 0)
+                    setDoc(dailyCounterRef, { count: 0, date: getTodayCounterKey(), timestamp: serverTimestamp() });
+                }
+                updateOrderLimitBadge();
+            });
+        }
+        
+        function loadDailyLimitFromFirebase() {
+             onSnapshot(settingsRef, (doc) => {
+                if (doc.exists()) {
+                    const data = doc.data();
+                    orderLimit = data.dailyLimit || 10;
+                    orderStartTime = data.orderStartTime || '08:00';
+                    orderEndTime = data.orderEndTime || '16:00';
+                } else {
+                    setDoc(settingsRef, { dailyLimit: 10, orderStartTime: '08:00', orderEndTime: '16:00' });
+                }
+                const dailyLimitInput = document.getElementById('dailyLimitInput');
+                const startTimeInput = document.getElementById('orderStartTime');
+                const endTimeInput = document.getElementById('orderEndTime');
+                
+                if (dailyLimitInput) dailyLimitInput.value = orderLimit;
+                if (startTimeInput) startTimeInput.value = orderStartTime;
+                if (endTimeInput) endTimeInput.value = orderEndTime;
+
+                updateOrderLimitBadge();
+                updateSubmitButtonState();
+            });
+        }
+
+        async function saveDailyLimit() {
+            const newLimit = document.getElementById('dailyLimitInput').value;
+            if (!newLimit || isNaN(newLimit) || parseInt(newLimit) <= 0) {
+                showToast('🚨 유효한 주문 한도 숫자를 입력해주세요.');
+                return;
+            }
+
+            try {
+                await setDoc(settingsRef, { dailyLimit: parseInt(newLimit) }, { merge: true });
+                showToast('✅ 주문 한도가 성공적으로 변경되었습니다!');
+            } catch (e) {
+                console.error("Error updating document: ", e);
+                showToast('❌ 주문 한도 변경에 실패했습니다.');
+            }
+        }
+
+        async function saveOrderTimes() {
+            const startTime = document.getElementById('orderStartTime').value;
+            const endTime = document.getElementById('orderEndTime').value;
+
+            if (!startTime || !endTime) {
+                showToast('🚨 시작 시간과 종료 시간을 모두 입력해주세요.');
+                return;
+            }
+
+            if (startTime >= endTime) {
+                showToast('🚨 시작 시간은 종료 시간보다 이전이어야 합니다.');
+                return;
+            }
+
+            try {
+                await setDoc(settingsRef, { orderStartTime: startTime, orderEndTime: endTime }, { merge: true });
+                showToast('✅ 주문 시간이 성공적으로 변경되었습니다!');
+            } catch (e) {
+                console.error("Error updating document: ", e);
+                showToast('❌ 주문 시간 변경에 실패했습니다.');
+            }
+        }
+
+        function loadMenuStatusFromFirebase() {
+            onSnapshot(menuStatusRef, (doc) => {
+                if (doc.exists()) {
+                    menuStatus = doc.data();
+                } else {
+                    menuStatus = {};
+                    menuItems.forEach(item => {
+                        menuStatus[item.name] = true;
+                    });
+                    setDoc(menuStatusRef, menuStatus);
+                }
+                updateMenuDisplay();
+                renderMenuManagement();
+            });
+        }
+
+        function updateMenuDisplay() {
+            const menuElements = document.querySelectorAll('.menu-item');
+            menuElements.forEach(item => {
+                const menuName = item.dataset.menu;
+                if (menuStatus[menuName] === false) {
+                    item.classList.add('sold-out');
+                } else {
+                    item.classList.remove('sold-out');
+                }
+            });
+        }
+
+        function renderMenuManagement() {
+            const container = document.getElementById('menuManagementGrid');
+            container.innerHTML = '';
+
+            menuItems.forEach(item => {
+                const isAvailable = menuStatus[item.name] !== false;
+                const managementItem = document.createElement('div');
+                managementItem.classList.add('menu-management-item');
+                managementItem.innerHTML = `
+                    <span class="menu-emoji">${item.emoji}</span>
+                    <div class="menu-name">${item.name}</div>
+                    <button class="menu-status-toggle ${isAvailable ? 'available' : 'sold-out'}" 
+                            onclick="toggleMenuStatus('${item.name}')">
+                        ${isAvailable ? '판매 중' : 'SOLD OUT'}
+                    </button>
+                `;
+                container.appendChild(managementItem);
+            });
+        }
+
+        window.toggleMenuStatus = async function(menuName) {
+            const newStatus = !menuStatus[menuName];
+            try {
+                await updateDoc(menuStatusRef, { [menuName]: newStatus });
+                showToast(newStatus ? `✅ ${menuName} 메뉴가 주문 가능하게 변경되었습니다.` : `🚫 ${menuName} 메뉴가 SOLD OUT으로 변경되었습니다.`);
+            } catch (error) {
+                console.error("Error updating menu status: ", error);
+                showToast('❌ 메뉴 상태 업데이트에 실패했습니다.');
+            }
+        }
+
+        function loadOrdersFromFirebase() {
+             onSnapshot(ordersRef, (querySnapshot) => {
+                orders = [];
+                querySnapshot.forEach((doc) => {
+                    orders.push({ id: doc.id, ...doc.data() });
+                });
+
+                if (isAdminMode && !isFirstLoad && orders.length > previousOrderCount) {
+                    speakText('새로운 주문이 들어왔습니다');
+                }
+
+                if (isFirstLoad) {
+                    isFirstLoad = false;
+                }
+                previousOrderCount = orders.length;
+
+                renderAdminOrders();
+                updateOrderLimitBadge();
+
+                if (!document.getElementById('myOrderStatusCard').classList.contains('hidden') && myOrder) {
+                    const updatedMyOrder = orders.find(order => order.id === myOrder.id);
+                    if (updatedMyOrder) {
+                        myOrder = updatedMyOrder;
+                        updateMyOrderDisplay();
+                    }
+                }
+            });
+        }
+
+        function updateMyOrderDisplay() {
+            if (myOrder) {
+                const cupDisplay = myOrder.cup === 'personal' ? '개인 텀블러' : myOrder.cup === 'we_don_cup' ? '위드인 컵' : '정보 없음';
+                const details = `
+                    <strong>메뉴:</strong> ${myOrder.menu} <span class="temp-badge ${myOrder.temp.toLowerCase()}">${myOrder.temp}</span><br>
+                    <strong>주문자:</strong> ${myOrder.name}<br>
+                    <strong>배달위치:</strong> ${myOrder.location}<br>
+                    <strong>컵:</strong> ${cupDisplay}<br>
+                    <strong>옵션:</strong> ${myOrder.options.join(', ') || '없음'}<br>
+                    <strong>요청사항:</strong> ${myOrder.request || '없음'}
+                `;
+                document.getElementById('myOrderDetails').innerHTML = details;
+                updateProgressBar(myOrder.status);
+            }
+        }
+
+        function updateCurrentTime() {
+            const now = new Date();
+            const koreaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
+            const currentTime = koreaTime.getHours().toString().padStart(2, '0') + ':' + koreaTime.getMinutes().toString().padStart(2, '0');
+            
+            const isWithinOrderTime = currentTime >= orderStartTime && currentTime <= orderEndTime;
+
+            const badge = document.getElementById('orderLimitBadge');
+            badge.textContent = `🔔 ${getTodayDate()} (${dailyOrderCount}/${orderLimit})`; 
+
+            const orderFullNotice = document.getElementById('orderFullNotice');
+            const orderTimeNotice = document.getElementById('orderTimeNotice');
+
+            if (!isWithinOrderTime) {
+                badge.classList.add('full');
+                orderTimeNotice.classList.remove('hidden');
+                orderTimeNotice.innerHTML = `🕐 주문 시간이 아닙니다.<br>주문 가능 시간: ${orderStartTime} - ${orderEndTime}`;
+                orderFullNotice.classList.add('hidden');
+            } else if (dailyOrderCount >= orderLimit) {
+                badge.classList.add('full');
+                orderFullNotice.classList.remove('hidden');
+                orderTimeNotice.classList.add('hidden');
+            } else {
+                badge.classList.remove('full');
+                orderFullNotice.classList.add('hidden');
+                orderTimeNotice.classList.add('hidden');
+            }
+            updateSubmitButtonState(); // 주문 상태 변경에 따라 버튼 상태 업데이트
+        }
+        
+        setInterval(updateCurrentTime, 60000);
+
+        function switchMode(mode) {
+            document.querySelectorAll('.content-area').forEach(div => div.classList.add('hidden'));
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(`${mode}Mode`).classList.remove('hidden');
+            document.getElementById(`${mode}ModeBtn`).classList.add('active');
+
+            isAdminMode = (mode === 'admin');
+        }
+
+        function switchAdminTab(tabName) {
+            document.querySelectorAll('[id$="TabContent"]').forEach(div => div.classList.add('hidden'));
+            document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(`${tabName}TabContent`).classList.remove('hidden');
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+            if (modalId === 'validationModal') {
+                const missingFields = [];
+                if (!document.getElementById('teacherName').value.trim()) missingFields.push('주문자 성함');
+                if (!document.getElementById('location').value.trim()) missingFields.push('배달 위치');
+                if (!currentOrder.menu) missingFields.push('메뉴 선택');
+                if (!currentOrder.temp) missingFields.push('온도 선택');
+                if (!currentOrder.cup) missingFields.push('컵 선택');
+
+                const list = document.getElementById('validationMessage');
+                list.innerHTML = missingFields.map(field => `<li>${field}</li>`).join('');
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        function openAdminPasswordModal() {
+            openModal('passwordModal');
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('adminPasswordInput').focus();
+        }
+
+        function checkAdminPassword() {
+            const input = document.getElementById('adminPasswordInput').value;
+            if (input === adminPassword) {
+                closeModal('passwordModal');
+                switchMode('admin');
+                showToast('✅ 관리자 로그인 성공!');
+            } else {
+                showToast('❌ 비밀번호가 올바르지 않습니다.');
+            }
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                
+                setTimeout(() => {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'ko-KR';
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1.3;
+                    utterance.volume = 1.0;
+                    
+                    const voices = window.speechSynthesis.getVoices();
+                    const koreanVoice = voices.find(voice => 
+                        voice.lang.includes('ko') && voice.name.includes('Female')
+                    ) || voices.find(voice => voice.lang.includes('ko'));
+                    
+                    if (koreanVoice) {
+                        utterance.voice = koreanVoice;
+                    }
+                    
+                    window.speechSynthesis.speak(utterance);
+                }, 500);
+            }
+        }
+        
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
+        }
+
+        function resetForm() {
+            document.getElementById('teacherName').value = '';
+            document.getElementById('location').value = '';
+            document.getElementById('request').value = '';
+            
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('selected'));
+            document.querySelectorAll('.temp-btn').forEach(btn => btn.classList.remove('selected'));
+            document.querySelectorAll('.cup-btn').forEach(btn => btn.classList.remove('selected'));
+            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+            
+            document.getElementById('personalCupNotice').classList.add('hidden');
+            document.getElementById('wedonCupNotice').classList.add('hidden');
+            
+            document.getElementById('hotBtn').disabled = false;
+            document.getElementById('iceBtn').disabled = false;
+
+            currentOrder = { menu: '', temp: '', cup: '', options: [], request: '' };
+            updateSubmitButtonState();
+        }
+
+        async function searchMyOrder() {
+            const nameToSearch = document.getElementById('myOrderName').value.trim();
+            const myOrderStatusCard = document.getElementById('myOrderStatusCard');
+            const noOrderMessage = document.getElementById('noOrderMessage');
+
+            if (!nameToSearch) {
+                myOrderStatusCard.classList.add('hidden');
+                noOrderMessage.classList.remove('hidden');
+                noOrderMessage.innerHTML = '<h3>주문자명을 입력해주세요.</h3>';
+                return;
+            }
+
+            try {
+                const q = query(ordersRef, where('nameLowerCase', '==', nameToSearch.toLowerCase()));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    let latestOrder = null;
+                    let latestTimestamp = null;
+
+                    querySnapshot.forEach((doc) => {
+                        const orderData = { id: doc.id, ...doc.data() };
+                        const timestamp = orderData.timestamp?.toMillis() || 0;
+                        if (!latestTimestamp || timestamp > latestTimestamp) {
+                            latestOrder = orderData;
+                            latestTimestamp = timestamp;
+                        }
+                    });
+
+                    if (latestOrder) {
+                        myOrder = latestOrder;
+                        updateMyOrderDisplay();
+                        myOrderStatusCard.classList.remove('hidden');
+                        noOrderMessage.classList.add('hidden');
+                    }
+                } else {
+                    myOrderStatusCard.classList.add('hidden');
+                    noOrderMessage.classList.remove('hidden');
+                    noOrderMessage.innerHTML = `<h3>'${nameToSearch}'님의 주문 내역이 없습니다.</h3><p>성함을 다시 확인해주세요!</p>`;
+                }
+            } catch (error) {
+                console.error("Error searching for my order: ", error);
+                showToast('❌ 주문 검색에 실패했습니다.');
+                myOrderStatusCard.classList.add('hidden');
+                noOrderMessage.classList.remove('hidden');
+                noOrderMessage.innerHTML = `<h3>주문 검색에 실패했습니다.</h3><p>다시 시도해주세요.</p>`;
+            }
+        }
+
+        function updateProgressBar(status) {
+            document.querySelectorAll('.progress-step').forEach(step => step.classList.remove('active', 'completed'));
+            
+            if (status === 'checking') {
+                document.getElementById('progressStep1').classList.add('active');
+            } else if (status === 'making') {
+                document.getElementById('progressStep1').classList.add('completed');
+                document.getElementById('progressStep2').classList.add('active');
+            } else if (status === 'delivering') {
+                document.getElementById('progressStep1').classList.add('completed');
+                document.getElementById('progressStep2').classList.add('completed');
+                document.getElementById('progressStep3').classList.add('active');
+            } else if (status === 'completed') {
+                document.getElementById('progressStep1').classList.add('completed');
+                document.getElementById('progressStep2').classList.add('completed');
+                document.getElementById('progressStep3').classList.add('completed');
+                document.getElementById('progressStep4').classList.add('completed');
+            }
+        }
+
+        function renderAdminOrders() {
+            const orderList = document.getElementById('orderList');
+            orderList.innerHTML = '';
+
+            if (orders.length === 0) {
+                document.getElementById('noAdminOrderMessage').classList.remove('hidden');
+                document.getElementById('totalOrders').textContent = 0;
+                document.getElementById('completedOrders').textContent = 0;
+                document.getElementById('pendingOrders').textContent = 0;
+                return;
+            }
+
+            document.getElementById('noAdminOrderMessage').classList.add('hidden');
+
+            const totalCount = orders.length;
+            const completedCount = orders.filter(o => o.status === 'completed').length;
+            const pendingCount = totalCount - completedCount;
+
+            document.getElementById('totalOrders').textContent = totalCount;
+            document.getElementById('completedOrders').textContent = completedCount;
+            document.getElementById('pendingOrders').textContent = pendingCount;
+
+            const allOrdersSorted = [...orders].sort((a, b) => {
+                // 1. 상태별 우선순위 점수 매기기 (Making > Delivering > Checking > Completed)
+                const getPriority = (status) => {
+                    if (status === 'making') return 1;    
+                    if (status === 'delivering') return 2; 
+                    if (status === 'checking') return 3;  
+                    if (status === 'completed') return 4;  
+                    return 5;
+                };
+
+                const priorityA = getPriority(a.status);
+                const priorityB = getPriority(b.status);
+
+                if (priorityA !== priorityB) {
+                    return priorityA - priorityB; 
+                }
+
+                // 2. 같은 상태라면 주문 시간 오름차순 (먼저 주문한게 위로)
+                const timeA = a.timestamp?.toMillis() || 0;
+                const timeB = b.timestamp?.toMillis() || 0;
+                return timeA - timeB; 
+            });
+
+            allOrdersSorted.forEach(order => {
+                const orderItem = document.createElement('div');
+                orderItem.classList.add('order-item', `status-${order.status}`);
+                
+                const cupDisplayName = order.cup === 'personal' ? '개인 텀블러' : order.cup === 'we_don_cup' ? '위드인 컵' : '정보 없음';
+
+                orderItem.innerHTML = `
+                    <div class="order-info">
+                        <h3>No. ${order.sequenceNumber}</h3>
+                        <p style="color: #7f8c8d; font-size: 0.9em;">
+                            ${order.timestamp ? new Date(order.timestamp.toMillis()).toLocaleTimeString('ko-KR') : '시간 정보 없음'}
+                        </p>
+                        <h3>${order.menu} <span class="temp-badge ${order.temp.toLowerCase()}">${order.temp}</span></h3>
+                        <p><strong>주문자:</strong> ${order.name}</p>
+                        <p><strong>위치:</strong> ${order.location}</p>
+                        <p><strong>컵:</strong> ${cupDisplayName || '정보 없음'}</p>
+                        <p><strong>옵션:</strong> ${order.options.join(', ') || '없음'}</p>
+                        <p><strong>요청:</strong> ${order.request || '없음'}</p>
+                    </div>
+                    <div class="order-status">
+                        <select class="status-select" data-order-id="${order.id}" data-sequence="${order.sequenceNumber}">
+                            <option value="checking" ${order.status === 'checking' ? 'selected' : ''}>주문 접수</option>
+                            <option value="making" ${order.status === 'making' ? 'selected' : ''}>제조 중</option>
+                            <option value="delivering" ${order.status === 'delivering' ? 'selected' : ''}>배달 중</option>
+                            <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>배달 완료</option>
+                        </select>
+                        <button class="delete-btn" data-order-id="${order.id}">삭제</button>
+                    </div>
+                `;
+                orderList.appendChild(orderItem);
+            });
+
+            document.querySelectorAll('.status-select').forEach(select => {
+                select.addEventListener('change', (e) => {
+                    const sequenceNumber = e.target.dataset.sequence;
+                    updateOrderStatus(e.target.dataset.orderId, e.target.value, sequenceNumber);
+                });
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const orderId = e.target.dataset.orderId;
+                    openDeleteModal(orderId);
+                });
+            });
+        }
+
+        async function updateOrderStatus(orderId, newStatus, sequenceNumber) {
+            try {
+                const orderRef = doc(ordersCollection, todayDate, 'dailyOrders', orderId);
+                await updateDoc(orderRef, { status: newStatus });
+                
+                let message = '';
+                if (newStatus === 'making') message = `No.${sequenceNumber}번 주문 제조를 시작합니다.`;
+                else if (newStatus === 'delivering') message = `No.${sequenceNumber}번 주문 배달을 시작합니다.`;
+                else if (newStatus === 'completed') message = `No.${sequenceNumber}번 주문이 완료되었습니다.`;
+
+                if (message) showToast(message);
+
+            } catch (e) {
+                console.error("Error updating status: ", e);
+                showToast('❌ 상태 업데이트에 실패했습니다.');
+            }
+        }
+
+        let orderIdToDelete = null;
+
+        function openDeleteModal(orderId) {
+            orderIdToDelete = orderId;
+            openModal('deleteModal');
+        }
+
+        /*
+         * ✅ 주문 삭제 시 일일 카운터를 1 감소시키는 로직이 추가되었습니다.
+         */
+        async function confirmDelete() {
+            if (!orderIdToDelete) return;
+            
+            try {
+                // 1. 트랜잭션을 사용하여 dailyOrderCounter 문서의 count 값을 안전하게 1 감소시킵니다.
+                await runTransaction(db, async (transaction) => {
+                    const counterDoc = await transaction.get(dailyCounterRef);
+                    let currentCounter = 0;
+                    
+                    if (counterDoc.exists()) {
+                        currentCounter = counterDoc.data().count;
+                    }
+                    
+                    // count가 0보다 클 때만 감소시킵니다.
+                    if (currentCounter > 0) {
+                        const newCounter = currentCounter - 1;
+                        // 카운터 업데이트
+                        transaction.update(dailyCounterRef, { 
+                            count: newCounter
+                        });
+                    }
+                });
+                
+                // 2. 주문 문서를 삭제합니다.
+                await deleteDoc(doc(ordersCollection, todayDate, 'dailyOrders', orderIdToDelete));
+                
+                // onSnapshot이 이 변경을 감지하고 dailyOrderCount를 업데이트하므로,
+                // UI는 자동으로 새로고침됩니다.
+                showToast('✅ 주문이 삭제되고 일일 주문 건수가 업데이트되었습니다.');
+                closeModal('deleteModal');
+                orderIdToDelete = null;
+
+            } catch (e) {
+                console.error("Error deleting document or updating counter: ", e);
+                showToast('❌ 주문 삭제 또는 카운터 업데이트에 실패했습니다.');
+            }
+        }
+
+        function updateOrderLimitBadge() {
+            const now = new Date();
+            const koreaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
+            const currentTime = koreaTime.getHours().toString().padStart(2, '0') + ':' + koreaTime.getMinutes().toString().padStart(2, '0');
+            
+            const isWithinOrderTime = currentTime >= orderStartTime && currentTime <= orderEndTime;
+
+            const badge = document.getElementById('orderLimitBadge');
+            badge.textContent = `🔔 ${getTodayDate()} (${dailyOrderCount}/${orderLimit})`; 
+
+            const orderFullNotice = document.getElementById('orderFullNotice');
+            const orderTimeNotice = document.getElementById('orderTimeNotice');
+
+            if (!isWithinOrderTime) {
+                badge.classList.add('full');
+                orderTimeNotice.classList.remove('hidden');
+                orderTimeNotice.innerHTML = `🕐 주문 시간이 아닙니다.<br>주문 가능 시간: ${orderStartTime} - ${orderEndTime}`;
+                orderFullNotice.classList.add('hidden');
+            } else if (dailyOrderCount >= orderLimit) { 
+                badge.classList.add('full');
+                orderFullNotice.classList.remove('hidden');
+                orderTimeNotice.classList.add('hidden');
+            } else {
+                badge.classList.remove('full');
+                orderFullNotice.classList.add('hidden');
+                orderTimeNotice.classList.add('hidden');
+            }
+            updateSubmitButtonState();
+        }
+
+        function selectMenu(element, menuName) {
+            if (menuStatus[menuName] === false) {
+                showToast('🚫 이 메뉴는 솔드아웃 상태입니다.');
+                return;
+            }
+
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('selected'));
+            element.classList.add('selected');
+            currentOrder.menu = menuName;
+            
+            const isHotOnly = element.classList.contains('hot-only');
+            const isIceOnly = element.classList.contains('ice-only');
+            
+            const hotBtn = document.getElementById('hotBtn');
+            const iceBtn = document.getElementById('iceBtn');
+
+            hotBtn.disabled = isIceOnly;
+            iceBtn.disabled = isHotOnly;
+
+            if (isHotOnly && currentOrder.temp === 'ICE') {
+                iceBtn.classList.remove('selected');
+                currentOrder.temp = '';
+            }
+            if (isIceOnly && currentOrder.temp === 'HOT') {
+                hotBtn.classList.remove('selected');
+                currentOrder.temp = '';
+            }
+            updateSubmitButtonState();
+        }
+
+        function selectTemp(btnId, tempName) {
+            document.getElementById('hotBtn').classList.remove('selected');
+            document.getElementById('iceBtn').classList.remove('selected');
+            document.getElementById(btnId).classList.add('selected');
+            currentOrder.temp = tempName;
+            updateSubmitButtonState();
+        }
+
+        function selectCup(btnId, cupName) {
+            document.querySelectorAll('.cup-btn').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById(btnId).classList.add('selected');
+            currentOrder.cup = cupName;
+
+            const personalNotice = document.getElementById('personalCupNotice');
+            const wedonNotice = document.getElementById('wedonCupNotice');
+            
+            personalNotice.classList.add('hidden');
+            wedonNotice.classList.add('hidden');
+
+            if (cupName === 'personal') {
+                personalNotice.classList.remove('hidden');
+            } else if (cupName === 'we_don_cup') {
+                wedonNotice.classList.remove('hidden');
+            }
+            updateSubmitButtonState();
+        }
+
+        function selectOption(element, optionName) {
+            element.classList.toggle('selected');
+            if (element.classList.contains('selected')) {
+                currentOrder.options.push(optionName);
+            } else {
+                currentOrder.options = currentOrder.options.filter(opt => opt !== optionName);
+            }
+        }
+
+        function updateSubmitButtonState() {
+            const name = document.getElementById('teacherName').value.trim();
+            const location = document.getElementById('location').value.trim();
+            const isFormValid = name && location && currentOrder.menu && currentOrder.temp && currentOrder.cup;
+
+            const now = new Date();
+            const koreaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
+            const currentTime = koreaTime.getHours().toString().padStart(2, '0') + ':' + koreaTime.getMinutes().toString().padStart(2, '0');
+            const isWithinOrderTime = currentTime >= orderStartTime && currentTime <= orderEndTime;
+
+            const submitBtn = document.getElementById('submitBtn');
+            if (isFormValid && dailyOrderCount < orderLimit && isWithinOrderTime) { 
+                submitBtn.disabled = false;
+                submitBtn.textContent = '주문하기';
+            } else {
+                submitBtn.disabled = true;
+                if (!isWithinOrderTime) submitBtn.textContent = '주문 가능 시간이 아닙니다';
+                else if (dailyOrderCount >= orderLimit) submitBtn.textContent = '선착순 마감되었습니다'; 
+                else submitBtn.textContent = '주문 정보를 모두 입력해주세요';
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show';
+            setTimeout(() => { toast.className = toast.className.replace('show', ''); }, 3000);
+        }
+    </script>
+</body>
+</html>
